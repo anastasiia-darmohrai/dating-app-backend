@@ -13,24 +13,18 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtUtil {
-    // Store user-specific secret keys (in a real app, this should be in a database)
     private final Map<String, String> userSecrets = new ConcurrentHashMap<>();
     private final long expiration = 1000 * 60 * 60; // 1 hour
 
-    // Generate a secure random key for a user
-    public String generateSecretKeyForUser(String username) {
+    public String generateSecretKey() {
         byte[] keyBytes = new byte[64]; // 512 bits for HS512
         new SecureRandom().nextBytes(keyBytes);
-        String secretKey = Base64.getEncoder().encodeToString(keyBytes);
-
-        // Store the secret key for this user
-        userSecrets.put(username, secretKey);
-        return secretKey;
+        return Base64.getEncoder().encodeToString(keyBytes);
     }
 
-    // Get the secret key for a user (or generate one if it doesn't exist yet)
+    // Get or generate secret key for a user
     private String getSecretKeyForUser(String username) {
-        return userSecrets.computeIfAbsent(username, this::generateSecretKeyForUser);
+        return userSecrets.computeIfAbsent(username, k -> generateSecretKey());
     }
 
     // Generate a JWT token for a user
