@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -15,14 +16,34 @@ public class User {
     private String id;
     @NotNull(message = "Name cannot be null")
     private String name;
+    @Indexed(unique = true)
+    private String username;
     @Min(value = 18, message = "Age should be at least 18")
     private int age;
     private String religion;
     private String gender;
     private String location;
+    private String password;
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getId() {
         return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setId(String id) {
